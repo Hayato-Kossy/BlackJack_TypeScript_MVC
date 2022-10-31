@@ -2,21 +2,23 @@ import { Card } from "../Model/card";
 import { Table } from "../Model/table";
 import { Player } from "../Model/player";
 import { Controller } from "../Controller/controller";
+
 export class View{
     static suitImgURL: { [key:string]: string } = { "S" : "https://recursionist.io/img/spade.png", "H" : "https://recursionist.io/img/heart.png", "C" : "https://recursionist.io/img/clover.png",  "D" : "https://recursionist.io/img/diamond.png",  "?" : "https://recursionist.io/img/questionMark.png"
     };
+
     static config = {
         gamePage: document.getElementById("gameDiv"),
         loginPage: document.getElementById("loginPage"),
         mainPage: document.getElementById("mainPage"),  
     }
 
-    static displayNone(ele:HTMLElement|null){
+    static displayNone(ele:HTMLElement|null):void{
         ele!.classList.remove("d-block");
         ele!.classList.add("d-none");
     }
 
-    static displayBlock(ele:HTMLElement|null){
+    static displayBlock(ele:HTMLElement|null):void{
         ele!.classList.remove("d-none");
         ele!.classList.add("d-block");
     }
@@ -32,8 +34,8 @@ export class View{
         </div>
         <div class="my-2">
             <select class="w-100">
-                <option value="blackjack">Blackjack </option>
-                <option value="poker">Poker </option>
+                <option value="blackjack">Blackjack</option>
+                <option value="poker">Poker</option>
             </select>
         </div>
         <div class="my-2">
@@ -43,14 +45,14 @@ export class View{
         View.config.loginPage!.append(container);
     }
 
-    static disableBtnAfterFirstAction(){
+    static disableBtnAfterFirstAction():void{
         let surrenderBtn:HTMLElement = document.getElementById("surrenderBtn")!;
         let doubleBtn:HTMLElement = document.getElementById("doubleBtn")!;
         surrenderBtn.classList.add("disabled")
         doubleBtn.classList.add("disabled")
     }
 
-    static renderTable(table:Table){
+    static renderTable(table:Table):void{
         View.config.mainPage!.innerHTML = '';
         let container = document.createElement("div");
         container.classList.add("col-12", "d-flex", "flex-column");
@@ -74,10 +76,9 @@ export class View{
         View.config.mainPage!.append(container);
         View.renderHouseStatusPage(table);
         View.renderPlayerStatusPage(table);
-        let isMask:boolean;
-        if(table.getGamePhase != "betting") isMask = false;
-        else isMask = true;
-        View.renderCards(table, isMask);
+        if(table.getGamePhase != "betting") table.setIsCardClosed = false;
+        else table.setIsCardClosed = true;
+        View.renderCards(table, table.setIsCardClosed);
     }
 
     static renderBetInfo(table:Table){
@@ -168,7 +169,7 @@ export class View{
             View.renderBetBtn(table);
         })
     }
-    //動作確認済み
+
     static renderHouseStatusPage(table:Table):void{
         let houesCardDiv:HTMLElement = document.getElementById("houesCardDiv")!;
         houesCardDiv.innerHTML = '';
@@ -212,10 +213,10 @@ export class View{
         })
     }
 
-    static renderCardDiv(card:Card, ele:string, isMask:boolean){
+    static renderCardDiv(card:Card, ele:string, isCardClosed:boolean){
         let targetElement:HTMLElement = document.getElementById(ele)!;
-        let suit:string = isMask ? "?" : card.getSuit;
-        let rank:string = isMask ? "?" : card.getRank;
+        let suit:string = isCardClosed ? "?" : card.getSuit;
+        let rank:string = isCardClosed ? "?" : card.getRank;
 
         targetElement.innerHTML +=
         `
@@ -230,7 +231,7 @@ export class View{
         `
     }
 
-    static renderCards(table:Table, flag:boolean){
+    static renderCards(table:Table, isCardClosed:boolean){
         let allPlayers:Player[] = table.getPlayers;
         let house = table.getHouse;
         let houseCardsDiv:string = house.getName + "CardsDiv"
@@ -240,11 +241,11 @@ export class View{
             View.renderCardDiv(houseCards[1], houseCardsDiv, true);
         }
         else{
-            houseCards.forEach(card=>{View.renderCardDiv(card, houseCardsDiv, flag)});
+            houseCards.forEach(card=>{View.renderCardDiv(card, houseCardsDiv, isCardClosed)});
         }
         allPlayers.forEach((player) => {
             player.getHand.forEach((card) => {
-                View.renderCardDiv(card, player.getName + "CardsDiv", flag);
+                View.renderCardDiv(card, player.getName + "CardsDiv", isCardClosed);
             })
         })
     } 
@@ -255,13 +256,13 @@ export class View{
         View.renderBetInfo(table);
     }
 
-    static updateActionBetInfo(table:Table){
+    static updateActionBetInfo(table:Table):void{
         let actionsAndBetsDiv:HTMLElement = document.getElementById("actionsAndBetsDiv")!;
         actionsAndBetsDiv.innerHTML = '';
         View.renderActionBtn(table);
     }
 
-    static renderActionBtn(table:Table){
+    static renderActionBtn(table:Table):void{
         let actionsAndBetsDiv:HTMLElement = document.getElementById("actionsAndBetsDiv")!;
         actionsAndBetsDiv.innerHTML =
         `
@@ -286,14 +287,13 @@ export class View{
             actionBtn.addEventListener("click", function(){
                 table.haveTurn(action);
                 Controller.controlTable(table);
-                // console.log(action)
             })
         })
     }
 
     static createNextGameBtnDiv():HTMLElement{
         let div:HTMLElement = document.createElement("div");
-        let nextGame = document.createElement("a");
+        let nextGame:HTMLElement = document.createElement("a");
         div.classList.add("d-flex", "flex-column", "justify-content-center", "align-items-center", "col-5");
         nextGame.classList.add("text-white", "btn", "btn-primary", "px-5", "py-1")
         nextGame.id = "nextGame";

@@ -10,7 +10,7 @@ export class Table{
     private house:Player;
     private turnCounter:number;
     private resultLog:HTMLElement[]
-
+    private isCardClosed:boolean
     constructor(private gameType:string, private readonly betDenominations = [5,20,50,100]){
         this.gameType = gameType;
         this.deck = new Deck(this.gameType)
@@ -19,6 +19,7 @@ export class Table{
         this.gamePhase = "betting";
         this.resultLog = [];
         this.turnCounter = 0;
+        this.isCardClosed = false;
     }
 
     public set setPlayers(userName:string){
@@ -285,4 +286,17 @@ export class Table{
     public get getResultLog():HTMLElement[]{
         return this.resultLog;
     }
+
+    public get getGameType():string{
+        return this.gameType;
+    }
+
+    public get getIsCardClosed():boolean{
+        return this.isCardClosed;
+    }
+
+    public set setIsCardClosed(state:boolean){
+        this.isCardClosed = state;
+    }
+
 }

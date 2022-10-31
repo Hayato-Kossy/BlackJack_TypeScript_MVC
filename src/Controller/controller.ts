@@ -6,31 +6,32 @@ export class Controller{
 
     static startGame():void{
         View.renderLoginPage();
-        let startGameBtn = View.config.gamePage!.querySelectorAll("#startGame")[0];
+        let startGameBtn:HTMLElement = View.config.gamePage!.querySelectorAll("#startGame")[0] as HTMLElement;
         startGameBtn.addEventListener("click", function(){
-            let userName = View.config.gamePage!.querySelectorAll("input")[0].value;
-            let table = new Table(View.config.loginPage!.querySelectorAll("select")[0].value);
+            let userName:string = View.config.gamePage!.querySelectorAll("input")[0].value;
+            let table:Table = new Table(View.config.loginPage!.querySelectorAll("select")[0].value);
             if(userName == ""){
                 alert("Please put your name");
-            } else{
-                Controller.changePageAndSetPlayer(table, userName);
+            } 
+            else{
+                Controller.changePageAndSetPlayer(table, userName,table.getGameType);
             }
         });
     }
 
-    static changePageAndSetPlayer(table:Table,userName:string){
+    static changePageAndSetPlayer(table:Table,userName:string,gameType:string){
         View.displayNone(View.config.loginPage);
         View.displayBlock(View.config.mainPage);
         table.setPlayers = userName;
-        table.blackjackAssignPlayerHands();
-
-        Controller.controlTable(table);
+        if (gameType === "blackjack") {
+            table.blackjackAssignPlayerHands();
+            Controller.controlTable(table);    
+        }
     }
 
-    //動作確認済み
     static controlTable(table:Table){
         View.renderTable(table);
-        let player = table.getTurnPlayer()
+        let player:Player = table.getTurnPlayer()
         if(player.getType === "user" && table.getGamePhase === "betting"){
             table.haveTurn(player.getBet);
             View.renderBetInfo(table);
