@@ -172,7 +172,7 @@ export class View{
     static renderHouseStatusPage(table:Table):void{
         let houesCardDiv:HTMLElement = document.getElementById("houesCardDiv")!;
         houesCardDiv.innerHTML = '';
-        let houseCardsDiv = table.getHouse.getName + "CardsDiv"
+        let houseCardsDiv:string = table.getHouse.getName + "CardsDiv"
         houesCardDiv.innerHTML +=
         `
         <p class="m-0 text-center text-white rem3">${table.getHouse.getName}</p>
