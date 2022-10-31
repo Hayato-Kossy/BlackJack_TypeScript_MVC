@@ -23,20 +23,11 @@ export class Player{
     }
 
     //NOTE戻り値のデータ型が抽象的すぎる
-    public drawOne(table:Table):any{
-        if(table.getDeck.isEmpty()){
-            alert("No cards left. Shuffle the cards.")
-            table.getDeck.pushRemainingCards(table);
-            table.getDeck.shuffle();
-            if(table.getGamePhase != "roundOver") return table.getDeck.getCards.pop();
-            else return null;
-        }
-        else return table.getDeck.getCards.pop();
+    public drawOne(table:Table):Card | undefined{
+        return table.alertIsEmptyAndAction()
     }
 
-    public promptPlayer(table:Table, userData:any):GameDecision{
-        console.log("done prompt")
-
+    public promptPlayer(table:Table, userData:number):GameDecision{
         let gameDecision:GameDecision = new GameDecision("", userData)
         if(table.getGamePhase === "betting") {
             if(this.type == "ai") gameDecision = this.getAiBetDecision(table);
@@ -52,7 +43,7 @@ export class Player{
     }
 
     public get getHandScore():number{
-        let handScore = 0;
+        let handScore:number = 0;
         this.hand.forEach(card=>{handScore += card.getRankNumber})
         let ace = this.countAce()
         if(handScore > 21 && this.type != "house" && ace > 0){
@@ -70,9 +61,8 @@ export class Player{
         return count;
     }
 
-    public isBlackJack(){
-        if(this.getHandScore == 21 && this.hand.length == 2) return true;
-        else return false;
+    public isBlackJack():boolean{
+        return this.getHandScore == 21 && this.hand.length == 2;
     }
 
     public resetPlayerBet(){
@@ -87,7 +77,6 @@ export class Player{
 
     //確認ずみ
     private getHouseGameDecision(table:Table):GameDecision{
-        console.log("house")
         if(table.allPlayersHitCompleted() && table.allPlayersBetCompleted()){
             if(this.isBlackJack()) return new GameDecision("blackjack", this.bet);
             else if(this.getHandScore < 17) {
@@ -113,7 +102,7 @@ export class Player{
 
     private getAiGameDecision(table:Table):GameDecision{
         let gameDecision:GameDecision = new GameDecision("",-1)
-        let actionList = ["surrender", "stand", "hit", "double"];
+        let actionList:string[] = ["surrender", "stand", "hit", "double"];
         if(this.isBlackJack()){
             return new GameDecision("blackjack", this.bet);
         }
@@ -126,7 +115,7 @@ export class Player{
             else return new GameDecision(actionList[this.randomIntInRange(0, actionList.length)], this.bet);
         }
         else if(this.gameStatus === "hit"){
-            let actionList = ["stand", "hit"];
+            let actionList:string[] = ["stand", "hit"];
             return new GameDecision(actionList[this.randomIntInRange(0, actionList.length)], this.bet);
         }
         return new GameDecision(this.gameStatus, this.bet);
@@ -134,8 +123,6 @@ export class Player{
     }
 
     private getUserGameDecision(userData:any):GameDecision{
-        // console.log(`${this.getType}` + `${userData}`)
-        let gameDecision:GameDecision = new GameDecision("",-1);
         if(this.isBlackJack()){
             return new GameDecision("blackjack", this.bet);
         }
@@ -156,7 +143,7 @@ export class Player{
         return this.hand;
     }
 
-    public set drawCard(card:Card){
+    public set drawCard(card:any){
         this.hand.push(card)
     }
 

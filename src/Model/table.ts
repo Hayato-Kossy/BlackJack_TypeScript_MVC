@@ -28,22 +28,20 @@ export class Table{
     }
 
     public cardIsOnTable(suit:string, rank:string):boolean{
-        let flag = false;
-        let houseHand = this.house.getHand
+        let houseHand:Card[] = this.house.getHand
         this.players.forEach((player) => {
             let playerHand:Card[] = player.getHand;
             playerHand.forEach((card) => {
-                if(card.getSuit == suit && card.getRank == rank) return !flag;
+                if(card.getSuit == suit && card.getRank == rank) return true;
             })
         })
         houseHand.forEach((card) => {
-            if(card.getSuit == suit && card.getRank == rank) return !flag;
+            if(card.getSuit == suit && card.getRank == rank) return true;
         })
-        return flag;
+        return false;
     }
 
     private evaluateMove(gameDecision:GameDecision, player:Player) {
-        // console.log("done evaluate")
         player.setGameStatus = gameDecision.getAction;
         player.setBet = gameDecision.getAmount;
         switch(gameDecision.getAction){
@@ -110,8 +108,7 @@ export class Table{
     }
 
     public haveTurn(userData:any):void{
-        // console.log("done haveturn")
-        let turnPlayer = this.getTurnPlayer();
+        let turnPlayer:Player = this.getTurnPlayer();
         if(this.gamePhase === "betting"){
             if(turnPlayer.getType === "house"){
                 this.house.setGameStatus = "Waiting for bets"
@@ -149,10 +146,7 @@ export class Table{
 
     public allPlayersHitCompleted():boolean{
         for(let i = 0; i < this.players.length; i++){
-            if(this.players[i].getGameStatus == "hit") {
-                console.log("False")
-                return false;
-            };
+            if(this.players[i].getGameStatus == "hit") return false; 
         }
         console.log("True")
         return true; 
@@ -222,7 +216,7 @@ export class Table{
         this.checkGameOver(player);
     }
 
-    public checkGameOver(player:Player){
+    public checkGameOver(player:Player):void{
         if(player.getType == "user" && player.getChips < 5){
             player.setGameStatus = "game over";
             this.gamePhase = "gameOver";
@@ -232,12 +226,8 @@ export class Table{
 
     public allPlayersBetCompleted():boolean{
         for(let i = 0; i < this.players.length; i++){
-            if(this.players[i].getGameStatus == "bet") {
-                console.log("False")
-                return false;
-            };
+            if(this.players[i].getGameStatus == "bet") return false;
         }
-        console.log("True")
         return true;   
     }
 
@@ -253,6 +243,16 @@ export class Table{
         let index:number = this.turnCounter % (this.players.length + 1);
         if (index === 0) return this.house;
         else return this.players[index - 1];
+    }
+
+    public alertIsEmptyAndAction():Card | undefined{
+        if (this.deck.isEmpty()){
+            alert("No cards left. Shuffle the cards.")
+            this.getDeck.pushRemainingCards(this);
+            this.getDeck.shuffle();
+            if(this.getGamePhase != "roundOver") return this.getDeck.getCards.pop();
+        }
+        else return this.getDeck.getCards.pop();
     }
     public get getGamePhase():string{
         return this.gamePhase;

@@ -40,7 +40,7 @@ export class Deck{
             this.cards[j] = temp;
         }
     }
-
+    
     public isEmpty():boolean{
         return this.cards.length == 0;
     }
