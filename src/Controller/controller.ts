@@ -10,7 +10,7 @@ export class Controller{
         startGameBtn.addEventListener("click", function(){
             let userName:string = View.config.gamePage!.querySelectorAll("input")[0].value;
             let table:Table = new Table(View.config.loginPage!.querySelectorAll("select")[0].value);
-            if(userName == ""){
+            if(userName === ""){
                 alert("Please put your name");
             } 
             else{
@@ -19,7 +19,7 @@ export class Controller{
         });
     }
 
-    static changePageAndSetPlayer(table:Table,userName:string,gameType:string){
+    static changePageAndSetPlayer(table:Table,userName:string,gameType:string):void{
         View.displayNone(View.config.loginPage);
         View.displayBlock(View.config.mainPage);
         table.setPlayers = userName;
@@ -29,7 +29,7 @@ export class Controller{
         }
     }
 
-    static controlTable(table:Table){
+    static controlTable(table:Table):void{
         View.renderTable(table);
         let player:Player = table.getTurnPlayer()
         if(player.getType === "user" && table.getGamePhase === "betting"){
@@ -74,7 +74,7 @@ export class Controller{
 
     }
 
-    static clickBetBtn(betCoin:number, player:Player){
+    static clickBetBtn(betCoin:number, player:Player):void{
         if(player.getChips >= betCoin){
             player.setBet = player.getBet + betCoin;
             player.setChips = player.getChips - betCoin;

@@ -58,18 +58,11 @@ export class View{
         container.classList.add("col-12", "d-flex", "flex-column");
         container.innerHTML =
         `
-            <div id="houesCardDiv" class="pt-5">
-            </div>
-    
-            <!-- Players Div -->
-            <div id="playersDiv" class="d-flex m-3 justify-content-center">
-            </div><!-- end players -->  
-            <!-- actionsAndBetsDiv -->
+            <div id="houesCardDiv" class="pt-5"></div>
+            <div id="playersDiv" class="d-flex m-3 justify-content-center"></div>
             <div id="actionsAndBetsDiv" class="d-flex pb-5 pt-4 d-flex flex-column align-items-center">
-                <!-- betsDiv -->
-                <div id="betsDiv" class="d-flex flex-column w-50 col-3">
-                </div><!-- end betsDiv-->
-            </div><!-- end actionsAndBetsDiv-->
+                <div id="betsDiv" class="d-flex flex-column w-50 col-3"></div> 
+            </div>
             <div id="resultLogDiv" class="d-flex pb-5 pt-4 justify-content-center text-white overflow-auto" style="max-height: 120px;">
             </div>
         `
@@ -81,18 +74,18 @@ export class View{
         View.renderCards(table, table.setIsCardClosed);
     }
 
-    static renderBetInfo(table:Table){
+    static renderBetInfo(table:Table):void{
         let betDiv:HTMLElement = document.getElementById("betsDiv")!;
         let user:Player = table.getPlayers.filter((player) =>
             player.getType === "user")[0]
         betDiv.innerHTML += 
         ` 
-        <p class="m-0 text-center text-white rem3">Bet: $${user.getBet}</p>
-        <p class="m-0 text-center text-white rem2">Current Money: $${user.getChips}</p>
+            <p class="m-0 text-center text-white rem3">Bet: $${user.getBet}</p>
+            <p class="m-0 text-center text-white rem2">Current Money: $${user.getChips}</p>
         `
     }
 
-    static updatePlayerInfo(table:Table){
+    static updatePlayerInfo(table:Table):void{
         let houesCardDiv:HTMLElement = document.getElementById("houesCardDiv")!
         let playersDiv:HTMLElement = document.getElementById("playersDiv")!;
         houesCardDiv.innerHTML = '';
@@ -101,7 +94,7 @@ export class View{
         View.renderPlayerStatusPage(table) 
     }
 
-    static renderBetBtn(table:Table){
+    static renderBetBtn(table:Table):void{
         let betsDiv:HTMLElement = document.getElementById("betsDiv")!;
 
         let betBtnDiv = document.createElement("div");
@@ -163,7 +156,7 @@ export class View{
 
         let allIn:Element = betsDiv.querySelectorAll("#allIn")[0];
         allIn.addEventListener("click", function(){
-            let allBet = user.getChips;
+            let allBet:number = user.getChips;
             user.playerAllin(allBet);
             View.updateBetInfo(table);
             View.renderBetBtn(table);
@@ -186,7 +179,7 @@ export class View{
         `
     }
 
-    static renderPlayerStatusPage(table:Table){
+    static renderPlayerStatusPage(table:Table):void{
         let playersDiv:HTMLElement = document.getElementById("playersDiv")!;
         playersDiv.innerHTML = '';
         let allPlayers:Player[] = table.getPlayers;
@@ -233,7 +226,7 @@ export class View{
 
     static renderCards(table:Table, isCardClosed:boolean){
         let allPlayers:Player[] = table.getPlayers;
-        let house = table.getHouse;
+        let house:Player = table.getHouse;
         let houseCardsDiv:string = house.getName + "CardsDiv"
         let houseCards:Card[] = house.getHand
         if(house.getGameStatus === "Waiting for actions"){
@@ -304,13 +297,13 @@ export class View{
 
     static renderResult(table:Table):void{
         let actionsAndBetsDiv:HTMLElement = document.getElementById("actionsAndBetsDiv")!;
-        let userData = table.getPlayers.filter(user=>user.getType === "user");
+        let userData:Player[] = table.getPlayers.filter(user=>user.getType === "user");
         let gameResult = userData[0].getGameResult.toUpperCase();
         let div = View.createNextGameBtnDiv();
 
         actionsAndBetsDiv.innerHTML = '';
 
-        let p = document.createElement("p");
+        let p:HTMLElement = document.createElement("p");
         p.classList.add("m-0", "text-white", "text-center", "rem3");
         p.innerText = `${gameResult}`
         div.append(p);
@@ -324,9 +317,9 @@ export class View{
         })
     }
 
-    static renderLogResult(table:Table){
+    static renderLogResult(table:Table):void{
         let resultLogDiv:HTMLElement = document.getElementById("resultLogDiv")!;
-        let div = document.createElement("div");
+        let div:HTMLElement = document.createElement("div");
         div.classList.add("text-white", "w-50");
         div.innerHTML +=
         `
@@ -338,7 +331,7 @@ export class View{
 
     static renderAllLog(table:Table):void{
         let resultLogDiv:HTMLElement = document.getElementById("resultLogDiv")!;
-        let div = document.createElement("div");
+        let div:HTMLElement = document.createElement("div");
         div.classList.add("text-white", "w-50");
         for(let i = 0; i < table.getResultLog.length; i++){
             div.innerHTML +=
@@ -362,7 +355,7 @@ export class View{
             <button type="submit" class="text-white btn btn-primary w-30 rem5" id="newGame">New Game</button>
         </div>
         `
-        let newGameBtn = actionsAndBetsDiv.querySelectorAll("#newGame")[0];
+        let newGameBtn:HTMLElement = actionsAndBetsDiv.querySelectorAll("#newGame")[0] as HTMLElement;
         newGameBtn.addEventListener("click", function(){
             View.displayNone(View.config.mainPage);
             View.displayBlock(View.config.loginPage);    
