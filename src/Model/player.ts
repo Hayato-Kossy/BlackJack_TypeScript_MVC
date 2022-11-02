@@ -2,14 +2,14 @@ import { Card } from "./card";
 import { Table } from "./table";
 import { GameDecision } from "./gameDecision";
 
-
 export class Player{
     private hand:Card[];
     private bet:number;
     private winAmount:number;
     private playerScore:number;
-    private gameStatus = "betting";
-    private gameResult = "";
+    private gameStatus:string = "betting";
+    private gameResult:string = "";
+    private counting:number;
     constructor(private name:string, private type:string,private gameType:string,private chips = 400
     ){
         this.name = name;
@@ -20,6 +20,7 @@ export class Player{
         this.bet = 0;
         this.winAmount = 0;
         this.playerScore = this.getHandScore;
+        this.counting = 0
     }
 
     //NOTE戻り値のデータ型が抽象的すぎる
@@ -122,6 +123,42 @@ export class Player{
 
     }
 
+    public cheatCounting(table:Table):void{
+        // countingの初期化
+        table.setAllPlayerCounting = table.getAllPlayerCounting - this.getCounting
+        this.setCounting = 0
+        const countingHashmap: { [key:string] : number;} = { 
+            "10" : -1, 
+            "J" : -1, 
+            "Q" : -1,  
+            "K" : -1,  
+            "A" : -1,
+            "7" : 0,
+            "8" : 0,
+            "9" : 0,
+        };
+        if (this.getType === "house"){
+            if (this.hand[0].getRank in countingHashmap) {
+                this.counting += countingHashmap[this.hand[0].getRank]
+                table.setAllPlayerCounting = table.getAllPlayerCounting + countingHashmap[this.hand[0].getRank]
+            }
+            else {
+                this.counting += 1
+                table.setAllPlayerCounting = table.getAllPlayerCounting + 1
+            }
+        }
+        else this.hand.forEach((card) => {
+            if (card.getRank in countingHashmap) {
+                this.counting += countingHashmap[card.getRank];
+                table.setAllPlayerCounting = table.getAllPlayerCounting + countingHashmap[card.getRank]
+            }
+            else {
+                this.counting += 1   
+                table.setAllPlayerCounting = table.getAllPlayerCounting + 1
+            } 
+        })
+    }
+
     private getUserGameDecision(userData:any):GameDecision{
         if(this.isBlackJack()){
             return new GameDecision("blackjack", this.bet);
@@ -201,5 +238,13 @@ export class Player{
 
     public randomIntInRange(min:number, max:number){
         return Math.floor(Math.random()* (max-min) + min);
+    }
+
+    public get getCounting():number {
+        return this.counting;
+    }
+
+    public set setCounting(count:number){
+        this.counting = count;
     }
 }

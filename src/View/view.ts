@@ -35,7 +35,6 @@ export class View{
         <div class="my-2">
             <select class="w-100">
                 <option value="blackjack">Blackjack</option>
-                <option value="poker">Poker</option>
             </select>
         </div>
         <div class="my-2">
@@ -58,12 +57,17 @@ export class View{
         container.classList.add("col-12", "d-flex", "flex-column");
         container.innerHTML =
         `
+            <div class="d-flex pb-5 justify-content-center text-white overflow-auto" style="max-height: 120px;">
+            <h1>BlackJack</h1>
+            </div>
             <div id="houesCardDiv" class="pt-5"></div>
             <div id="playersDiv" class="d-flex m-3 justify-content-center"></div>
-            <div id="actionsAndBetsDiv" class="d-flex pb-5 pt-4 d-flex flex-column align-items-center">
+            <div id="actionsAndBetsDiv" class="d-flex d-flex flex-column align-items-center">
                 <div id="betsDiv" class="d-flex flex-column w-50 col-3"></div> 
             </div>
-            <div id="resultLogDiv" class="d-flex pb-5 pt-4 justify-content-center text-white overflow-auto" style="max-height: 120px;">
+            <div id="countingLog" class="d-flex pb-5 justify-content-center text-white overflow-autostyle="max-height: 120px;">
+            </div>
+            <div id="resultLogDiv" class="d-flex pb-5 justify-content-center text-white overflow-auto" style="max-height: 120px;">
             </div>
         `
         View.config.mainPage!.append(container);
@@ -71,7 +75,7 @@ export class View{
         View.renderPlayerStatusPage(table);
         if(table.getGamePhase != "betting") table.setIsCardClosed = false;
         else table.setIsCardClosed = true;
-        View.renderCards(table, table.setIsCardClosed);
+        View.renderCards(table, table.getIsCardClosed);
     }
 
     static renderBetInfo(table:Table):void{
@@ -169,12 +173,11 @@ export class View{
         let houseCardsDiv:string = table.getHouse.getName + "CardsDiv"
         houesCardDiv.innerHTML +=
         `
-        <p class="m-0 text-center text-white rem3">${table.getHouse.getName}</p>
+        <p class="m-0 text-center text-white pt-2 rem3">${table.getHouse.getName}</p>
         <div class="text-white d-flex m-0 p-0 flex-column justify-content-center align-items-center">
             <p class="rem1 text-left">Status:${table.getHouse.getGameStatus}&nbsp</a>
         </div>
-            <!-- House Card Row -->
-        <div id=${houseCardsDiv} class="d-flex justify-content-center pt-3 pb-2">   
+        <div id=${houseCardsDiv} class="d-flex justify-content-center pb-2">   
         </div>
         `
     }
@@ -189,19 +192,15 @@ export class View{
             playersDiv.innerHTML +=
             `
             <div id=${playerDiv} class="d-flex flex-column w-50">
-                <p class="m-0 text-white text-center rem3">${player.getName}</p>
-    
-                <!-- playerInfoDiv -->
-                <div class="text-white d-flex m-0 p-0 flex-column justify-content-center align-items-center">
+                <p class="m-0 text-white text-center rem2">${player.getName}</p>
+                    <div class="text-white d-flex flex-column justify-content-center align-items-center">
                     <p class="rem1 text-left">Status:${player.getGameStatus}&nbsp</a>
                     <p class="rem1 text-left">Bet:${player.getBet}&nbsp</a>
                     <p class="rem1 text-left">Chips:${player.getChips}&nbsp</a>
                 </div>
-    
-                <!-- cardsDiv -->
                 <div id=${cardsDiv} class="d-flex justify-content-center">
-                </div><!-- end Cards -->
-            </div><!-- end player -->        
+                </div>
+            </div> 
             `       
         })
     }
@@ -304,7 +303,7 @@ export class View{
         actionsAndBetsDiv.innerHTML = '';
 
         let p:HTMLElement = document.createElement("p");
-        p.classList.add("m-0", "text-white", "text-center", "rem3");
+        p.classList.add("m-0","text-white", "text-center", "rem3");
         p.innerText = `${gameResult}`
         div.append(p);
         actionsAndBetsDiv.append(div);
@@ -320,7 +319,7 @@ export class View{
     static renderLogResult(table:Table):void{
         let resultLogDiv:HTMLElement = document.getElementById("resultLogDiv")!;
         let div:HTMLElement = document.createElement("div");
-        div.classList.add("text-white", "w-50");
+        div.classList.add("text-white", "w-300");
         div.innerHTML +=
         `
         <p>rounnd ${table.getResultLog.length + 1}</p>
@@ -332,7 +331,7 @@ export class View{
     static renderAllLog(table:Table):void{
         let resultLogDiv:HTMLElement = document.getElementById("resultLogDiv")!;
         let div:HTMLElement = document.createElement("div");
-        div.classList.add("text-white", "w-50");
+        div.classList.add("text-white", "w-300");
         for(let i = 0; i < table.getResultLog.length; i++){
             div.innerHTML +=
             `
@@ -343,6 +342,23 @@ export class View{
         resultLogDiv.append(div);        
     }
 
+    static renderAllCountingLog(table:Table):void{
+        let countingLog:HTMLElement = document.getElementById("countingLog")!;
+        let div:HTMLElement = document.createElement("div");
+        div.classList.add("text-white", "w-300");
+        div.innerHTML += 
+            `
+            <p>All Player Counting -> ${table.getAllPlayerCounting}</p>
+            <p>Dealer Counting -> ${table.getHouse.getCounting}</p>
+            `   
+        table.getPlayers.forEach((player) => {
+            div.innerHTML += 
+                `
+                <p>${player.getName}'s counting -> ${player.getCounting}</p>
+                `
+        })
+        countingLog.append(div);        
+    }
     static renderGameOver():void{
         let actionsAndBetsDiv:HTMLElement = document.getElementById("actionsAndBetsDiv")!;
         actionsAndBetsDiv.innerHTML +=

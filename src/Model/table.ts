@@ -11,6 +11,7 @@ export class Table{
     private turnCounter:number;
     private resultLog:HTMLElement[]
     private isCardClosed:boolean
+    private allPlayerCounting:number;
     constructor(private gameType:string, private readonly betDenominations = [5,20,50,100]){
         this.gameType = gameType;
         this.deck = new Deck(this.gameType)
@@ -20,12 +21,11 @@ export class Table{
         this.resultLog = [];
         this.turnCounter = 0;
         this.isCardClosed = false;
+        this.allPlayerCounting = 0
     }
 
     public set setPlayers(userName:string){
-        this.players.push(new Player("AI1", "ai", this.gameType));
-        this.players.push(new Player(userName, "user", this.gameType));
-        this.players.push(new Player("AI2", "ai", this.gameType));
+        this.players.push(new Player("AI1", "ai", this.gameType), new Player(userName, "user", this.gameType), new Player("AI2", "ai", this.gameType));
     }
 
     public cardIsOnTable(suit:string, rank:string):boolean{
@@ -42,7 +42,7 @@ export class Table{
         return false;
     }
 
-    private evaluateMove(gameDecision:GameDecision, player:Player) {
+    private evaluateMove(gameDecision:GameDecision, player:Player):void{
         player.setGameStatus = gameDecision.getAction;
         player.setBet = gameDecision.getAmount;
         switch(gameDecision.getAction){
@@ -80,7 +80,7 @@ export class Table{
         return list;
     }
 
-    public blackjackAssignPlayerHands(){
+    public blackjackAssignPlayerHands():void{
         while(this.house.getHand.length < 2){
             this.house.drawCard = this.house.drawOne(this);
         }
@@ -109,6 +109,7 @@ export class Table{
     }
 
     public haveTurn(userData:any):void{
+        console.log(this.getAllPlayerCounting)
         let turnPlayer:Player = this.getTurnPlayer();
         if(this.gamePhase === "betting"){
             if(turnPlayer.getType === "house"){
@@ -122,7 +123,6 @@ export class Table{
                 this.house.setGameStatus = "Waiting for actions"
             }
         }
-
         else if(this.gamePhase === "acting"){
             if(this.getIsAllActionsCompleted){
                 this.evaluateWinners();
@@ -131,8 +131,16 @@ export class Table{
             else{
             this.evaluateMove(turnPlayer.promptPlayer(this, userData), turnPlayer);
             }
+            // hitなどアクション後にcountingを開始
+            turnPlayer.cheatCounting(this)
+            console.log(turnPlayer.getName + "Count -> " + `${turnPlayer.getCounting}` + " allPlayerCounting -> " + `${this.getAllPlayerCounting}`)
         }
         else if(this.gamePhase === "roundOver"){
+            this.players.forEach((player) => {
+                player.setCounting = 0
+            })
+            this.house.setCounting = 0
+            this.allPlayerCounting = 0
             this.gamePhase = "betting";
             this.house.setGameStatus = "Waiting for bets";
             this.turnCounter = 0;
@@ -140,6 +148,7 @@ export class Table{
         }
         this.turnCounter++;
     }
+
 
     private onLastPlayer():boolean{
         return this.turnCounter % (this.players.length + 1) === this.players.length;
@@ -209,7 +218,8 @@ export class Table{
                 if(result == "push") break;
                 else player.setWinAmount = player.getBet;                
         }
-        if(result === "lose" || player.getGameStatus === "bust" || player.getGameStatus === "surrender") player.setWinAmount = player.getBet * -1;
+        if(result === "lose" || player.getGameStatus === "bust") player.setWinAmount = player.getBet * -1;
+        if (player.getGameStatus === "surrender") player.setWinAmount = player.getBet * -0.5;
         if(result != "push") player.setChips = player.getChips + player.getWinAmount;
 
         if(player.getGameStatus != "blackjack") player.setGameResult = result;
@@ -299,4 +309,15 @@ export class Table{
         this.isCardClosed = state;
     }
 
+    public get getTurnCounter():number{
+        return this.turnCounter;
+    }
+
+    public get getAllPlayerCounting():number{
+        return this.allPlayerCounting;
+    }
+
+    public set setAllPlayerCounting(counting:number){
+        this.allPlayerCounting = counting
+    }
 }
