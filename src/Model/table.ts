@@ -109,8 +109,7 @@ export class Table{
     }
 
     public haveTurn(userData:any):void{
-        console.log(this.getAllPlayerCounting)
-        let turnPlayer:Player = this.getTurnPlayer();
+        let turnPlayer:Player = this.getTurnPlayer;
         if(this.gamePhase === "betting"){
             if(turnPlayer.getType === "house"){
                 this.house.setGameStatus = "Waiting for bets"
@@ -250,7 +249,7 @@ export class Table{
         return this.houseActionCompleted() && this.allPlayersHitCompleted();
     }
 
-    public getTurnPlayer():Player{
+    public get getTurnPlayer():Player{
         let index:number = this.turnCounter % (this.players.length + 1);
         if (index === 0) return this.house;
         else return this.players[index - 1];
@@ -265,6 +264,7 @@ export class Table{
         }
         else return this.getDeck.getCards.pop();
     }
+
     public get getGamePhase():string{
         return this.gamePhase;
     }

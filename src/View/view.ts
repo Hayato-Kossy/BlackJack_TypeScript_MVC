@@ -65,7 +65,9 @@ export class View{
             <div id="actionsAndBetsDiv" class="d-flex d-flex flex-column align-items-center">
                 <div id="betsDiv" class="d-flex flex-column w-50 col-3"></div> 
             </div>
-            <div id="countingLog" class="d-flex pb-5 justify-content-center text-white overflow-autostyle="max-height: 120px;">
+            <div id="countingLog" class="d-flex pb-1 justify-content-center text-white overflow-auto style="max-height: 120px;">
+            </div>
+            <div id="recomendation" class="d-flex justify-content-center text-white overflow-auto style="max-height: 120px;">
             </div>
             <div id="resultLogDiv" class="d-flex pb-5 justify-content-center text-white overflow-auto" style="max-height: 120px;">
             </div>
@@ -192,7 +194,7 @@ export class View{
             playersDiv.innerHTML +=
             `
             <div id=${playerDiv} class="d-flex flex-column w-50">
-                <p class="m-0 text-white text-center rem2">${player.getName}</p>
+                <p class="m-0 text-white text-center rem3">${player.getName}</p>
                     <div class="text-white d-flex flex-column justify-content-center align-items-center">
                     <p class="rem1 text-left">Status:${player.getGameStatus}&nbsp</a>
                     <p class="rem1 text-left">Bet:${player.getBet}&nbsp</a>
@@ -335,7 +337,7 @@ export class View{
         for(let i = 0; i < table.getResultLog.length; i++){
             div.innerHTML +=
             `
-            <p>rounnd ${i + 1}</p>
+            <p class="h3">rounnd ${i + 1}</p>
             `
             div.append(table.getResultLog[i]);
         }
@@ -348,17 +350,33 @@ export class View{
         div.classList.add("text-white", "w-300");
         div.innerHTML += 
             `
-            <p>All Player Counting -> ${table.getAllPlayerCounting}</p>
-            <p>Dealer Counting -> ${table.getHouse.getCounting}</p>
+            <p class="h3">All Player Counting -> ${table.getAllPlayerCounting}</p>
             `   
-        table.getPlayers.forEach((player) => {
-            div.innerHTML += 
-                `
-                <p>${player.getName}'s counting -> ${player.getCounting}</p>
-                `
-        })
+        // <p>Dealer Counting -> ${table.getHouse.getCounting}</p>
+        // 各プレイヤーのカウンティングはいらない…？
+        // table.getPlayers.forEach((player) => {
+        //     console.log(player.recomendationAction(table))
+        //     div.innerHTML += 
+        //         `
+        //         <p>${player.getName}'s Counting -> ${player.getCounting}</p>
+        //         `
+        // })
         countingLog.append(div);        
     }
+    // <p>${player.recomendationAction(table)}</p> recomendation
+
+    static renderRecomendation(table:Table):void{
+        let countingLog:HTMLElement = document.getElementById("recomendation")!;
+        let div:HTMLElement = document.createElement("div");
+        div.classList.add("text-white", "w-300");
+        let userData:Player[] = table.getPlayers.filter(user=>user.getType === "user");
+        div.innerHTML += 
+            `
+            <p class="h3">This player's recomended action is ${userData[0].recomendationAction(table)}</p>
+            `   
+        countingLog.append(div);         
+    }
+
     static renderGameOver():void{
         let actionsAndBetsDiv:HTMLElement = document.getElementById("actionsAndBetsDiv")!;
         actionsAndBetsDiv.innerHTML +=

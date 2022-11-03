@@ -1,6 +1,7 @@
 import { Card } from "./card";
 import { Table } from "./table";
 import { GameDecision } from "./gameDecision";
+import { strategy } from "../Consts/basicStrategy";
 
 export class Player{
     private hand:Card[];
@@ -10,6 +11,7 @@ export class Player{
     private gameStatus:string = "betting";
     private gameResult:string = "";
     private counting:number;
+    private recomendation:string;
     constructor(private name:string, private type:string,private gameType:string,private chips = 400
     ){
         this.name = name;
@@ -21,9 +23,9 @@ export class Player{
         this.winAmount = 0;
         this.playerScore = this.getHandScore;
         this.counting = 0
+        this.recomendation = ""
     }
 
-    //NOTE戻り値のデータ型が抽象的すぎる
     public drawOne(table:Table):Card | undefined{
         return table.alertIsEmptyAndAction()
     }
@@ -89,13 +91,13 @@ export class Player{
     }
 
     private getAiBetDecision(table:Table):GameDecision{
-        if(table.getTurnPlayer().getGameStatus == "game over"){
+        if(table.getTurnPlayer.getGameStatus == "game over"){
             return new GameDecision("game over", 0)
         }
         else{
             let availableBet = table.getBetDenominations.filter(bet=>(bet <= this.chips));
             let betAmount = availableBet[this.randomIntInRange(0, availableBet.length)];
-            table.getTurnPlayer().bet = betAmount;
+            table.getTurnPlayer.bet = betAmount;
 
             return new GameDecision("bet", betAmount);
         }
@@ -108,11 +110,11 @@ export class Player{
             return new GameDecision("blackjack", this.bet);
         }
         else if(this.gameStatus === "bet"){
-            if(gameDecision.getAction == "double" && table.getTurnPlayer().chips < table.getTurnPlayer().bet * 2){
+            if(gameDecision.getAction == "double" && table.getTurnPlayer.chips < table.getTurnPlayer.bet * 2){
                 gameDecision.setAction = "hit";
                 return new GameDecision("hit", this.bet);
             }
-            else if(gameDecision.getAction == "double") table.getTurnPlayer().setBet = table.getTurnPlayer().getBet * 2;
+            else if(gameDecision.getAction == "double") table.getTurnPlayer.setBet = table.getTurnPlayer.getBet * 2;
             else return new GameDecision(actionList[this.randomIntInRange(0, actionList.length)], this.bet);
         }
         else if(this.gameStatus === "hit"){
@@ -157,6 +159,16 @@ export class Player{
                 table.setAllPlayerCounting = table.getAllPlayerCounting + 1
             } 
         })
+    }
+
+    public recomendationAction(table:Table):string{
+        // if (table.getTurnPlayer.getType !== "user") return "hit"
+        console.log(table.getTurnPlayer.getHandScore)
+        let userScore:number = table.getTurnPlayer.getHandScore;
+        if (userScore < 8) return "hit";
+        if (userScore >= 17) return "stand";
+        let houseScore:number = table.getHouse.getHand[0].getRankNumber;
+        return strategy[userScore - 8][houseScore - 2];
     }
 
     private getUserGameDecision(userData:any):GameDecision{
@@ -246,5 +258,13 @@ export class Player{
 
     public set setCounting(count:number){
         this.counting = count;
+    }
+
+    public get getRecomendation():string{
+        return this.recomendation;
+    }
+
+    public setRecomendation(recomendation:string){
+        this.recomendation = recomendation
     }
 }

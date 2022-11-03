@@ -31,8 +31,11 @@ export class Controller{
 
     static controlTable(table:Table):void{
         View.renderTable(table);
-        let player:Player = table.getTurnPlayer()
-        if (table.getGamePhase !== "betting") View.renderAllCountingLog(table);
+        let player:Player = table.getTurnPlayer
+        if (table.getGamePhase !== "betting") {
+            View.renderAllCountingLog(table);
+            View.renderRecomendation(table);
+        }
         if(player.getType === "user" && table.getGamePhase === "betting"){
             table.haveTurn(player.getBet);
             View.renderBetInfo(table);
