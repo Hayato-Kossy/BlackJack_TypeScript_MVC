@@ -61,7 +61,8 @@ export class View{
             <h1>BlackJack</h1>
             </div>
             <div id="houesCardDiv" class="pt-5"></div>
-            <div id="playersDiv" class="d-flex m-3 justify-content-center"></div>
+            <div id="playersDiv" class="d-flex m-3 justify-content-center">
+            </div>
             <div id="actionsAndBetsDiv" class="d-flex d-flex flex-column align-items-center">
                 <div id="betsDiv" class="d-flex flex-column w-50 col-3"></div> 
             </div>
