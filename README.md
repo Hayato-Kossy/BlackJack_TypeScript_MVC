@@ -12,7 +12,7 @@ Modelに存在するクラスは変数をprivateに設定し、getterとsetter�
 ## 作成の経緯
 主にMVCとOOPの学習とそのアウトプットのために開発しました。
 
-Recursion(<https://recursionist.io/>)というCS学習プラットフォームにあるコカリキュラムでMVCを学び、プロジェクト内で与えられたブラックジャックのmodelの基本的な仕様をもとに作成しました。
+Recursion(<https://recursionist.io/>)というCS学習プラットフォームにあるカリキュラムでMVCを学び、プロジェクト内で与えられたブラックジャックのmodelの基本的な仕様をもとに作成しました。
 
 具体的な作成手順としてはまずはJavaScriptだけでとりあえず動くように作成後、Modelの各クラスをTypeScriptでOOPを意識し作成し直しました。その後ViewとControllerの概念をMVCを適応して作られているアプリのコードを読み構造を理解してから、ViewとControllerをTypeScriptで書き直しました。
 
