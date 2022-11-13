@@ -17,8 +17,6 @@ https://hayato-kossy.github.io/BlackJack_TypeScript_MVC/
 
 Recursion(<https://recursionist.io/>)というコンピュータサイエンス学習プラットフォームにあるカリキュラムでMVCを学び、プロジェクト内で与えられたブラックジャックのmodelの基本的な仕様をもとに作成しました。
 
-具体的な作成手順としては、まずはJavaScriptだけでとりあえず動くように作成後、Modelの各クラスをTypeScriptでOOPを意識し作成し直しました。その後ViewとControllerの概念をMVCを適応して作られているアプリのコードを読み構造を理解してから、ViewとControllerをTypeScriptで書き直しました。
-
 ## こだわった点
 
 ①設計：MVCの概念を採用し、TypeScriptを用い、OOPを意識して開発しました。変数はprivateで宣言しgetterとsetterで変数の取得、更新を行なっています。Modelを設計する際には、特にゲームの進行を管理するTableクラスの設計を重視しており、実際のゲームの進行に関わる場面において、Playerの状態やCardやDeckの変数にアクセスしたい場合には、Tableクラスを経由しゲームに必要な状態や変数をTableクラスでもアクセスと保持できるように心がけました。　
