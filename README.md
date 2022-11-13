@@ -4,7 +4,7 @@ MVCとOOPを意識してTSでBlackJackを作成しました
 Modelに存在するクラスは変数をprivateに設定し、getterとsetterで管理するなど、堅牢性を重視しました。
 
 ## URL
-https://github.com/Hayato-Kossy/BlackJack_TypeScript_MVC
+https://hayato-kossy.github.io/BlackJack_TypeScript_MVC/
 
 ## 使用技術
 使用技術　HTML/CSS/TypeScript/JavaScript
