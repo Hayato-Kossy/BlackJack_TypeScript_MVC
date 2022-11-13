@@ -14,7 +14,7 @@ export class Player{
     private prevGameResult:string = "";
     private counting:number;
     private recomendation:string;
-    private standardBetAmount = 50;
+    private recomendedBetAmount = 50;
     private dAlembertCount = 1;
 
     constructor(private name:string, private type:string,private gameType:string,private chips = 400
@@ -262,16 +262,16 @@ export class Player{
         this.recomendation = recomendation
     }
 
-    public get getStandardBetAmount():number{
-        return this.standardBetAmount;
+    public get getrecomendedBetAmount():number{
+        return this.recomendedBetAmount;
     }
 
-    public set setStandardBetAmount(multiple:number){
-        this.standardBetAmount = this.getStandardBetAmount * multiple;
+    public set setrecomendedBetAmount(multiple:number){
+        this.recomendedBetAmount = this.getrecomendedBetAmount * multiple;
     }
 
-    public set resetStandardBetAmount(fifty:number){
-        this.standardBetAmount = fifty;
+    public set resetrecomendedBetAmount(fifty:number){
+        this.recomendedBetAmount = fifty;
     }
     //dAlembertCount
 

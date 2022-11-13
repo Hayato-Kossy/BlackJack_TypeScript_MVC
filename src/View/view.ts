@@ -2,6 +2,7 @@ import { Card } from "../Model/card";
 import { Table } from "../Model/table";
 import { Player } from "../Model/player";
 import { Controller } from "../Controller/controller";
+import { dAlembertMethod } from "../Consts/d'AlembertMethod";
 
 export class View{
     static suitImgURL: { [key:string]: string } = { "S" : "https://recursionist.io/img/spade.png", "H" : "https://recursionist.io/img/heart.png", "C" : "https://recursionist.io/img/clover.png",  "D" : "https://recursionist.io/img/diamond.png",  "?" : "https://recursionist.io/img/questionMark.png"
@@ -87,6 +88,7 @@ export class View{
             player.getType === "user")[0]
         betDiv.innerHTML += 
         ` 
+            <p class="m-0 text-center text-white">Your recomended Bet Amount is: $${dAlembertMethod(user)}</p>
             <p class="m-0 text-center text-white rem3">Bet: $${user.getBet}</p>
             <p class="m-0 text-center text-white rem2">Current Money: $${user.getChips}</p>
         `

@@ -6,17 +6,17 @@ export const dAlembertMethod = (player:Player):number => {
 
     if (player.getPrevGameResult === null && player.getPrevGameResult === undefined || player.getPrevGameResult === ""){
         player.resetDAlembertCount = 1
-        player.resetStandardBetAmount = 50
+        player.resetrecomendedBetAmount = 50
     }
     else if (player.getPrevGameResult === "lose" || player.getPrevGameResult === "bust" || player.getPrevGameResult === "surrender") {
         player.setDAlembertCount = 1
-        player.setStandardBetAmount = player.getDAlembertCount
+        player.setrecomendedBetAmount = player.getDAlembertCount
     }
     else{
         player.setDAlembertCount = -1
-        player.resetStandardBetAmount = 50
+        player.resetrecomendedBetAmount = 50
         if (player.getDAlembertCount <= 0) player.setDAlembertCount = 1
 
     }
-    return player.getStandardBetAmount;
+    return player.getrecomendedBetAmount;
 }
