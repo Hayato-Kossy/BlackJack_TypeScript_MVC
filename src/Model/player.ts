@@ -1,7 +1,8 @@
 import { Card } from "./card";
 import { Table } from "./table";
 import { GameDecision } from "./gameDecision";
-import { strategy } from "../Consts/basicStrategy";
+import { Strategy } from "../Consts/basicStrategy";
+import { dAlembertMethod } from "../Consts/d'AlembertMethod";
 
 export class Player{
     private hand:Card[];
@@ -10,8 +11,12 @@ export class Player{
     private playerScore:number;
     private gameStatus:string = "betting";
     private gameResult:string = "";
+    private prevGameResult:string = "";
     private counting:number;
     private recomendation:string;
+    private standardBetAmount = 50;
+    private dAlembertCount = 1;
+
     constructor(private name:string, private type:string,private gameType:string,private chips = 400
     ){
         this.name = name;
@@ -39,8 +44,7 @@ export class Player{
         else if (table.getGamePhase === "acting"){
             if(this.type === "ai") gameDecision = this.getAiGameDecision(table);
             else if(this.type === "user") gameDecision = this.getUserGameDecision(userData);
-            else {gameDecision = this.getHouseGameDecision(table)
-            };
+            else gameDecision = this.getHouseGameDecision(table);
         }
         return gameDecision;
     }
@@ -78,7 +82,6 @@ export class Player{
         this.chips -= betCoin;
     }
 
-    //確認ずみ
     private getHouseGameDecision(table:Table):GameDecision{
         if(table.allPlayersHitCompleted() && table.allPlayersBetCompleted()){
             if(this.isBlackJack()) return new GameDecision("blackjack", this.bet);
@@ -95,34 +98,27 @@ export class Player{
             return new GameDecision("game over", 0)
         }
         else{
-            let availableBet = table.getBetDenominations.filter(bet=>(bet <= this.chips));
-            let betAmount = availableBet[this.randomIntInRange(0, availableBet.length)];
-            table.getTurnPlayer.bet = betAmount;
-
-            return new GameDecision("bet", betAmount);
+            return new GameDecision("bet", dAlembertMethod(this));
         }
     }
 
     private getAiGameDecision(table:Table):GameDecision{
         let gameDecision:GameDecision = new GameDecision("",-1)
-        let actionList:string[] = ["surrender", "stand", "hit", "double"];
         if(this.isBlackJack()){
             return new GameDecision("blackjack", this.bet);
         }
         else if(this.gameStatus === "bet"){
             if(gameDecision.getAction == "double" && table.getTurnPlayer.chips < table.getTurnPlayer.bet * 2){
                 gameDecision.setAction = "hit";
-                return new GameDecision("hit", this.bet);
+                return new GameDecision(this.recomendationAction(table), this.bet);            
             }
             else if(gameDecision.getAction == "double") table.getTurnPlayer.setBet = table.getTurnPlayer.getBet * 2;
-            else return new GameDecision(actionList[this.randomIntInRange(0, actionList.length)], this.bet);
+            else return new GameDecision(this.recomendationAction(table), this.bet);
         }
         else if(this.gameStatus === "hit"){
-            let actionList:string[] = ["stand", "hit"];
-            return new GameDecision(actionList[this.randomIntInRange(0, actionList.length)], this.bet);
+            return new GameDecision(this.recomendationAction(table), this.bet);
         }
         return new GameDecision(this.gameStatus, this.bet);
-
     }
 
     public cheatCounting(table:Table):void{
@@ -162,13 +158,11 @@ export class Player{
     }
 
     public recomendationAction(table:Table):string{
-        // if (table.getTurnPlayer.getType !== "user") return "hit"
-        console.log(table.getTurnPlayer.getHandScore)
         let userScore:number = table.getTurnPlayer.getHandScore;
         if (userScore < 8) return "hit";
         if (userScore >= 17) return "stand";
         let houseScore:number = table.getHouse.getHand[0].getRankNumber;
-        return strategy[userScore - 8][houseScore - 2];
+        return Strategy[userScore - 8][houseScore - 2];
     }
 
     private getUserGameDecision(userData:any):GameDecision{
@@ -264,7 +258,41 @@ export class Player{
         return this.recomendation;
     }
 
-    public setRecomendation(recomendation:string){
+    public set setRecomendation(recomendation:string){
         this.recomendation = recomendation
+    }
+
+    public get getStandardBetAmount():number{
+        return this.standardBetAmount;
+    }
+
+    public set setStandardBetAmount(multiple:number){
+        this.standardBetAmount = this.getStandardBetAmount * multiple;
+    }
+
+    public set resetStandardBetAmount(fifty:number){
+        this.standardBetAmount = fifty;
+    }
+    //dAlembertCount
+
+    public get getDAlembertCount():number{
+        return this.dAlembertCount;
+    }
+
+    public set setDAlembertCount(add:number){
+        this.dAlembertCount = this.getDAlembertCount + add;
+    }
+
+    public set resetDAlembertCount(zero:number){
+        this.dAlembertCount = zero;
+    }
+
+    //prevGameResult
+    public get getPrevGameResult():string{
+        return this.prevGameResult;
+    }
+
+    public set setPrevGameResult(result:string){
+        this.prevGameResult = result;
     }
 }

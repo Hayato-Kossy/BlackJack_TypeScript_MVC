@@ -1,4 +1,4 @@
-export const strategy = [
+export const Strategy = [
     ["hit","hit","hit","hit","hit","hit","hit","hit","hit","hit"],
     ["hit","double","double","double","double","hit","hit","hit","hit","hit"],
     ["double","double","double","double","double","double","double","double","hit","hit"],

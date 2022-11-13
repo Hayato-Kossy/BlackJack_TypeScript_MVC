@@ -73,6 +73,7 @@ export class Table{
         let list:HTMLElement = document.createElement("ul") as HTMLElement;
         this.players.forEach((player) => {
             let playerListResult:HTMLElement = document.createElement("li");
+            console.log(player.getGameResult)
             playerListResult.textContent = `name: ${player.getName}, action: ${player.getGameStatus}, bet: ${player.getBet}, won: ${player.getWinAmount}, result: ${player.getGameResult}`
             list.append(playerListResult);       
         })
@@ -102,6 +103,7 @@ export class Table{
             if (player.getGameStatus !== "game over"){
                 player.setGameStatus = "betting";
             }
+            player.setPrevGameResult = player.getGameResult;
             player.setGameResult = '';
         })
         this.house.setHand = [];
