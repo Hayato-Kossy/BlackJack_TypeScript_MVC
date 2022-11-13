@@ -558,7 +558,7 @@ var Player = /** @class */ (function () {
     });
     Object.defineProperty(Player.prototype, "setStandardBetAmount", {
         set: function (multiple) {
-            this.standardBetAmount = this.getStandardBetAmount * multiple;
+            this.standardBetAmount = 50 * multiple;
         },
         enumerable: false,
         configurable: true
