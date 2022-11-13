@@ -917,6 +917,7 @@ class View{
             player.getType === "user")[0]
         betDiv.innerHTML += 
         ` 
+            <p class="m-0 text-center text-white">Your recomended Bet Amount is: $${dAlembertMethod(user)}</p>
             <p class="m-0 text-center text-white rem3">Bet: $${user.getBet}</p>
             <p class="m-0 text-center text-white rem2">Current Money: $${user.getChips}</p>
         `

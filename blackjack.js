@@ -1035,7 +1035,7 @@ var View = /** @class */ (function () {
             return player.getType === "user";
         })[0];
         betDiv.innerHTML +=
-            " \n            <p class=\"m-0 text-center text-white rem3\">Bet: $".concat(user.getBet, "</p>\n            <p class=\"m-0 text-center text-white rem2\">Current Money: $").concat(user.getChips, "</p>\n        ");
+            " \n            <p class=\"m-0 text-center text-white\">Your recomended Bet Amount is: $".concat(dAlembertMethod(user), "</p>\n            <p class=\"m-0 text-center text-white rem3\">Bet: $").concat(user.getBet, "</p>\n            <p class=\"m-0 text-center text-white rem2\">Current Money: $").concat(user.getChips, "</p>\n        ");
     };
     View.updatePlayerInfo = function (table) {
         var houesCardDiv = document.getElementById("houesCardDiv");
