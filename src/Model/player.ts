@@ -267,7 +267,7 @@ export class Player{
     }
 
     public set setrecomendedBetAmount(multiple:number){
-        this.recomendedBetAmount = this.getrecomendedBetAmount * multiple;
+        this.recomendedBetAmount = 50 * multiple;
     }
 
     public set resetrecomendedBetAmount(fifty:number){

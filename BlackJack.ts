@@ -482,7 +482,7 @@ class Player{
     }
 
     public set setStandardBetAmount(multiple:number){
-        this.standardBetAmount = this.getStandardBetAmount * multiple;
+        this.standardBetAmount = 50 * multiple;
     }
 
     public set resetStandardBetAmount(fifty:number){
