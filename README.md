@@ -3,6 +3,9 @@
 MVCとOOPを意識してTSでBlackJackを作成しました
 Modelに存在するクラスは変数をprivateに設定し、getterとsetterで管理するなど、堅牢性を重視しました。
 
+## URL
+https://github.com/Hayato-Kossy/BlackJack_TypeScript_MVC
+
 ## 使用技術
 使用技術　HTML/CSS/TypeScript/JavaScript
 
@@ -31,9 +34,6 @@ Recursion(<https://recursionist.io/>)というコンピュータサイエンス�
 
 ## これからの改善点、拡張案
 BlackJackのルールを重視するあまり、ターン遷移を扱うメソッドがBlackJackに特化してしまっている部分があるので特化せざるを得ないメソッドと、そうでないメソッドをわけ、継承やインターフェースを使って他のゲームも追加しやすい設計を考え直す必要があると考えました。
-
-## URL(デプロイ方法が違いますが同じものです)
-https://hayato-kossy.github.io/Black_Jack_OOP/
 
 ## Usage
 賭け金を決めるとターンが始まり、そのターンのハンドで行えるアクションが表示されます
